@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TC Room Cell Calculator</title>
+    <title>Cell Calculator</title>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 20px; max-width: 500px; margin: auto; background-color: #f4f7f6; }
         h2 { color: #2c3e50; text-align: center; }
@@ -79,7 +79,7 @@
             const sq2 = parseFloat(document.getElementById("sq2").value) || 0;
             const sq3 = parseFloat(document.getElementById("sq3").value) || 0;
             const sq4 = parseFloat(document.getElementById("sq4").value) || 0;
-            const df = parseFloat(document.getElementById("dilutionFactor").value) || 20;
+            const df = parseFloat(document.getElementById("dilutionFactor").value) || 4;
             const V_init = parseFloat(document.getElementById("volInit").value) || 2;
             const C_target = parseFloat(document.getElementById("targetConc").value) || 1000000;
             const N_seed = parseFloat(document.getElementById("targetSeed").value) || 100000;
