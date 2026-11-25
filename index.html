@@ -1,161 +1,89 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cell Calculator</title>
-    <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 20px; max-width: 500px; margin: auto; background-color: #f4f7f6; }
-        h2 { color: #2c3e50; text-align: center; }
-        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        label { display: block; margin-top: 15px; font-weight: bold; color: #34495e; font-size: 14px; }
-        input { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #bdc3c7; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
-        .grid-2x2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 5px; }
-        button { width: 100%; padding: 12px; background-color: #3498db; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; margin-top: 20px; cursor: pointer; }
-        button:active { background-color: #2980b9; }
-        .danger { background-color: #e74c3c; margin-top: 10px;}
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 12px; }
-        th, td { border: 1px solid #ddd; padding: 6px; text-align: center; word-break: break-all; }
-        th { background-color: #ecf0f1; font-size: 11px; }
-        .result-text { font-size: 16px; color: #27ae60; font-weight: bold; text-align: center; margin-top: 15px; background: #e8f8f5; padding: 10px; border-radius: 6px; display: none; }
-        .error-text { color: #e74c3c; background: #fdedec; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cell Calculator</title>
+<style>
+:root{color-scheme:light;--bg:#f4f7f6;--ink:#243a4b;--muted:#607480;--line:#d7e1e3;--blue:#176b9e;--pale:#eaf4fa;--green:#16654f;--red:#a62d39}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:1100px;margin:auto;padding:20px}h1{font-size:28px;margin:0}h2{font-size:19px;margin:0 0 12px}h3{font-size:15px;margin:0}p{margin:6px 0}.sub,small{color:var(--muted);font-size:13px}.layout{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:16px;align-items:start;margin-top:18px}.card{background:white;border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px;box-shadow:0 2px 6px #243a4b08}.head,.fieldrow,.buttons,.actions,.sci,.section-head{display:flex;align-items:center;gap:8px}.head,.section-head{justify-content:space-between}.head{margin-bottom:10px}.rounds{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.round{border:1px solid var(--line);border-radius:10px;padding:10px;min-width:0}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:10px}.square{border:1px solid var(--line);border-radius:9px;padding:7px;min-width:0}.square:focus-within{border-color:var(--blue)}.square .head{margin:0 0 4px;gap:2px}.square label{font-size:13px;font-weight:600}.square input{font-size:22px;text-align:center;padding:7px 3px}.square .buttons{margin-top:6px;gap:4px}.square .buttons button{flex:1;padding:5px 2px;min-width:0}.round-summary{font-size:13px;color:var(--muted);margin-top:9px}.field{margin-top:14px}.field:first-of-type{margin-top:0}.field>label,.field>span.label{display:block;font-size:14px;font-weight:650;margin-bottom:6px}input{width:100%;min-width:0;border:1px solid #b9cbd0;border-radius:7px;background:#fff;color:var(--ink);font:inherit;padding:9px;min-height:44px}input[data-num]{font-variant-numeric:tabular-nums}input.active{outline:2px solid var(--blue);outline-offset:1px;background:#f5fbff}input[aria-invalid=true]{border-color:var(--red);outline-color:var(--red)}button{font:inherit;font-weight:650;cursor:pointer;min-height:40px;border:1px solid var(--line);border-radius:7px;padding:7px 11px;background:#fff;color:var(--ink);touch-action:manipulation}button:active{transform:translateY(1px);background:var(--pale)}button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}button:disabled{opacity:.45;cursor:not-allowed}.clear{color:var(--red);font-size:13px;white-space:nowrap}.square .clear{min-height:32px;padding:3px 5px}.primary{background:var(--blue);border-color:var(--blue);color:#fff}.primary:active{background:#10517a}.actions{flex-wrap:wrap}.actions .primary{flex:1}.presets{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}.presets button{min-height:36px;background:var(--pale);border-color:#cce2ed;color:#185777;padding:5px 10px}.presets button[aria-pressed=true]{background:var(--blue);color:#fff;border-color:var(--blue)}.sci .coefficient{flex:2}.sci .exponent{flex:1}.sci>span{white-space:nowrap}.summary{background:#eff7f5;color:var(--green);border-radius:8px;padding:10px;margin-top:12px;font-variant-numeric:tabular-nums}.result{margin-top:12px;padding:12px;border-radius:9px;background:#eff7f5;color:var(--green);overflow-wrap:anywhere}.result.error{background:#fff0ef;color:var(--red)}.result dl{display:grid;grid-template-columns:1fr auto;gap:8px;margin:0}.result dt,.result dd{margin:0}.result dd{font-weight:700;text-align:right}.pad{position:sticky;top:12px}.pad .head{margin-bottom:6px}.pad-status{border-radius:7px;background:var(--pale);padding:8px;margin-bottom:9px;min-height:43px;font-size:14px;overflow-wrap:anywhere}.pad-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.pad-grid button{min-height:48px;font-size:20px}.pad-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}.pad-actions button{min-height:42px}.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:13px;white-space:nowrap}th,td{border-bottom:1px solid var(--line);padding:8px;text-align:left}th{color:var(--muted);background:#f4f7f6}td:nth-child(n+3){font-variant-numeric:tabular-nums}.history-head{margin-bottom:10px}.mobile-pad-toggle{display:none}#padBody[hidden], [hidden]{display:none!important}
+@media(max-width:800px){main{padding:12px;max-width:620px}.layout{display:block}.pad{position:fixed;z-index:10;bottom:0;left:0;right:0;top:auto;margin:0;border-radius:14px 14px 0 0;padding:10px 12px max(10px,env(safe-area-inset-bottom));box-shadow:0 -3px 18px #243a4b22}.mobile-pad-toggle{display:inline-block}.pad .head{margin:0}.pad-status{padding:5px 8px;min-height:30px;margin:5px 0}.pad-grid button{min-height:42px;padding:4px}.pad-actions button{min-height:38px;padding:4px}.pad-grid,.pad-actions{gap:5px}body{padding-bottom:75px}body.pad-open{padding-bottom:355px}input[data-num]{scroll-margin-bottom:340px}.pad h2{font-size:16px;margin:0}.rounds{gap:8px}.round{padding:8px}.card{padding:12px}}
+@media(max-width:460px){.rounds{grid-template-columns:1fr}.grid{gap:8px}.square{padding:8px}.square .buttons button{min-height:42px}.round .head{margin-bottom:4px}.sci{gap:5px}.sci .coefficient{flex:1.5}.result dl{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+</style>
 </head>
 <body>
-
-    <h2>Cell Calculator</h2>
-
-    <div class="card">
-        <label>細胞株名稱 (Cell Line)</label>
-        <input type="text" id="cellName" placeholder="e.g., KPC #2">
-
-        <label>血球計數器四角細胞數 (Hemocytometer Counts)</label>
-        <div class="grid-2x2">
-            <input type="number" id="sq1" placeholder="左上 (Top-Left)" min="0">
-            <input type="number" id="sq2" placeholder="右上 (Top-Right)" min="0">
-            <input type="number" id="sq3" placeholder="左下 (Bottom-Left)" min="0">
-            <input type="number" id="sq4" placeholder="右下 (Bottom-Right)" min="0">
-        </div>
-
-        <label>稀釋倍數 (Dilution Factor)</label>
-        <input type="number" id="dilutionFactor" value="20" min="1">
-
-        <label>目前懸浮液體積 V_init (ml)</label>
-        <input type="number" id="volInit" value="2" step="0.1" min="0">
-
-        <label>目標濃度 C_target (cells/ml)</label>
-        <input type="number" id="targetConc" value="1000000" step="100000" min="0">
-
-        <label>目標接種量 (Seeding Target, cells/well)</label>
-        <input type="number" id="targetSeed" value="100000" step="10000" min="0">
-
-        <button onclick="calculate()">計算並儲存 (Calculate & Save)</button>
-        <div id="resultOutput" class="result-text"></div>
-    </div>
-
-    <div class="card">
-        <h3 style="margin-top: 0; text-align: center; color: #2c3e50;">歷史紀錄 (History Log)</h3>
-        <table id="historyTable">
-            <thead>
-                <tr>
-                    <th>時間</th>
-                    <th>細胞</th>
-                    <th>原濃度<br>(cells/ml)</th>
-                    <th>加 cDMEM<br>(ml)</th>
-                    <th>Seeding<br>(μl)</th>
-                </tr>
-            </thead>
-            <tbody id="historyBody"></tbody>
-        </table>
-        <button class="danger" onclick="clearHistory()">清除所有紀錄 (Clear All)</button>
-    </div>
-
-    <script>
-        window.onload = function() { loadHistory(); };
-
-        function calculate() {
-            const name = document.getElementById("cellName").value || "Unknown";
-            const sq1 = parseFloat(document.getElementById("sq1").value) || 0;
-            const sq2 = parseFloat(document.getElementById("sq2").value) || 0;
-            const sq3 = parseFloat(document.getElementById("sq3").value) || 0;
-            const sq4 = parseFloat(document.getElementById("sq4").value) || 0;
-            const df = parseFloat(document.getElementById("dilutionFactor").value) || 4;
-            const V_init = parseFloat(document.getElementById("volInit").value) || 2;
-            const C_target = parseFloat(document.getElementById("targetConc").value) || 1000000;
-            const N_seed = parseFloat(document.getElementById("targetSeed").value) || 100000;
-
-            const X = sq1 + sq2 + sq3 + sq4;
-            const outputDiv = document.getElementById("resultOutput");
-            outputDiv.style.display = "block";
-
-            if (X === 0) { 
-                outputDiv.className = "result-text error-text";
-                outputDiv.innerHTML = "請輸入細胞計數數值"; 
-                return; 
-            }
-
-            // 1. 計算原濃度 y = (X/4) * DF * 10^4
-            const y = (X / 4) * df * 10000; 
-            
-            // 2. 計算總細胞數
-            const totalCells = y * V_init;
-
-            // 3. 計算目標總體積 (ml)
-            const V_total = totalCells / C_target;
-
-            // 4. 計算需要額外加入的培養基體積 (ml)
-            const V_add = V_total - V_init;
-
-            // 5. 計算 Seeding 體積 (μl)
-            const V_seed = (N_seed / C_target) * 1000;
-
-            if (V_add < 0) {
-                outputDiv.className = "result-text error-text";
-                outputDiv.innerHTML = `原濃度過低 (${y.toExponential(2)} cells/ml)<br>無法稀釋至 ${C_target.toExponential(2)} cells/ml<br>請重新離心濃縮細胞。`;
-            } else {
-                outputDiv.className = "result-text";
-                outputDiv.innerHTML = `原濃度: ${y.toExponential(2)} cells/ml<br>
-                                       請加入 <b>${V_add.toFixed(2)} ml</b> cDMEM<br>
-                                       每 well 接種 <b>${V_seed.toFixed(1)} μl</b>`;
-                
-                // 將原濃度 y 以科學記號格式傳遞給儲存函數
-                saveRecord(name, y.toExponential(2), V_add.toFixed(2), V_seed.toFixed(1));
-            }
-        }
-
-        function saveRecord(name, origConc, vAdd, vSeed) {
-            const now = new Date();
-            const timeStr = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
-            const record = { time: timeStr, name: name, conc: origConc, add: vAdd, seed: vSeed };
-            
-            let history = JSON.parse(localStorage.getItem("cellHistory")) || [];
-            history.unshift(record); 
-            if(history.length > 50) history.pop(); // 保留最近 50 筆
-            localStorage.setItem("cellHistory", JSON.stringify(history));
-            
-            loadHistory();
-        }
-
-        function loadHistory() {
-            let history = JSON.parse(localStorage.getItem("cellHistory")) || [];
-            let tbody = document.getElementById("historyBody");
-            tbody.innerHTML = "";
-            history.forEach(r => {
-                // 處理舊紀錄可能沒有 conc 屬性的狀況
-                let displayConc = r.conc ? r.conc : "N/A";
-                let tr = `<tr><td>${r.time}</td><td>${r.name}</td><td>${displayConc}</td><td>+ ${r.add}</td><td>${r.seed}</td></tr>`;
-                tbody.innerHTML += tr;
-            });
-        }
-
-        function clearHistory() {
-            if (confirm("確定要清除所有紀錄嗎？(無法復原)")) {
-                localStorage.removeItem("cellHistory");
-                loadHistory();
-                const outputDiv = document.getElementById("resultOutput");
-                outputDiv.style.display = "none";
-            }
-        }
-    </script>
+<main>
+<header><h1>Cell Calculator</h1><p class="sub">Hemocytometer · 雙次四格計數 · 細胞稀釋與接種</p></header>
+<div class="layout">
+<div>
+<section class="card" aria-labelledby="countTitle">
+<div class="section-head"><h2 id="countTitle">1. 細胞計數</h2><button type="button" class="clear" id="clearCounts">清空八格</button></div>
+<div class="field"><label for="cellName">細胞株名稱（選填）</label><div class="fieldrow"><input id="cellName" type="text" autocomplete="off" placeholder="Cell line"><button type="button" class="clear" data-clear="cellName">清空</button></div></div>
+<p class="sub">每次四個大格；空白代表未計數，0 代表該格沒有細胞。點選欄位後可使用數字鍵盤，或按 +1／+5 累計。</p>
+<div class="rounds" id="rounds"></div>
+<div class="summary" id="countSummary" aria-live="polite">已完成 0 / 8 格</div>
+</section>
+<section class="card" aria-labelledby="paramsTitle">
+<h2 id="paramsTitle">2. 實驗參數</h2>
+<div class="field"><label for="dilutionFactor">稀釋倍數 (Dilution Factor)</label><div class="fieldrow"><input id="dilutionFactor" data-num="decimal" type="text" inputmode="none" autocomplete="off" placeholder="未填寫"><button type="button" class="clear" data-clear="dilutionFactor">清空</button></div><div class="presets" data-presets="dilutionFactor"></div></div>
+<div class="field"><label for="volInit">目前懸浮液體積 V_init (mL)</label><div class="fieldrow"><input id="volInit" data-num="decimal" type="text" inputmode="none" autocomplete="off" placeholder="未填寫"><button type="button" class="clear" data-clear="volInit">清空</button></div><div class="presets" data-presets="volInit"></div></div>
+<div class="field" id="targetConcField"><span class="label">目標濃度 C_target (cells/mL)</span><div class="sci"><input class="coefficient" id="targetConcCoef" data-num="decimal" type="text" inputmode="none" autocomplete="off" aria-label="目標濃度係數" placeholder="係數"><span>× 10 ^</span><input class="exponent" id="targetConcExp" data-num="integer" type="text" inputmode="none" autocomplete="off" aria-label="目標濃度指數" placeholder="指數"><button type="button" class="clear" data-clear="targetConcCoef,targetConcExp">清空</button></div><div class="presets" data-powers="targetConc"></div><small id="targetConcPreview"></small></div>
+<div class="field" id="targetSeedField"><span class="label">目標接種量 (cells/well)</span><div class="sci"><input class="coefficient" id="targetSeedCoef" data-num="decimal" type="text" inputmode="none" autocomplete="off" aria-label="接種量係數" placeholder="係數"><span>× 10 ^</span><input class="exponent" id="targetSeedExp" data-num="integer" type="text" inputmode="none" autocomplete="off" aria-label="接種量指數" placeholder="指數"><button type="button" class="clear" data-clear="targetSeedCoef,targetSeedExp">清空</button></div><div class="presets" data-powers="targetSeed"></div><small id="targetSeedPreview"></small></div>
+<p class="sub">點選 10 的次方按鈕可直接設定指數；若係數空白，按鈕會明確填入 1。係數已有數值時則保留。</p>
+<div class="actions" style="margin-top:16px"><button type="button" class="primary" id="calculate">計算並儲存</button><button type="button" class="clear" id="resetForm">清空全部輸入</button></div>
+<div id="resultOutput" class="result" role="status" aria-live="polite" hidden></div>
+</section>
+</div>
+<aside class="card pad" aria-label="螢幕數字鍵盤"><div class="head"><h2>數字鍵盤</h2><button class="mobile-pad-toggle" id="togglePad" type="button" aria-expanded="false" aria-controls="padBody">展開</button></div><div id="padBody"><div id="padStatus" class="pad-status">請點選數字欄位</div><div class="pad-grid" id="padGrid"></div><div class="pad-actions"><button type="button" id="padClear" class="clear">清空本欄</button><button type="button" id="padNext" class="primary">下一欄 →</button></div><p class="sub">也可使用實體鍵盤；下一欄依左上、左下、右上、右下的順序前進。</p></div></aside>
+</div>
+<section class="card"><div class="section-head history-head"><h2>歷史紀錄 (History Log)</h2><button type="button" class="clear" id="clearHistory">清除紀錄</button></div><div class="table-wrap"><table><thead><tr><th>時間</th><th>細胞</th><th>原濃度<br>cells/mL</th><th>總細胞數</th><th>加 cDMEM<br>mL</th><th>Seeding<br>µL/well</th></tr></thead><tbody id="historyBody"></tbody></table></div><p class="sub" id="historyNote">紀錄儲存在此瀏覽器，保留最近 50 筆；舊版紀錄仍可讀取。</p></section>
+</main>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const positions=[['tl','左上'],['tr','右上'],['bl','左下'],['br','右下']];
+const countIds=[];const names={dilutionFactor:'稀釋倍數',volInit:'懸浮液體積',targetConcCoef:'目標濃度係數',targetConcExp:'目標濃度指數',targetSeedCoef:'接種量係數',targetSeedExp:'接種量指數'};
+for(let r=1;r<=2;r++){
+ const el=document.createElement('section');el.className='round';el.innerHTML=`<div class="head"><h3>第 ${r} 次</h3><button type="button" class="clear" data-round-clear="${r}">清空本次</button></div><div class="grid"></div><div class="round-summary" id="roundSummary${r}">0 / 4 格</div>`;
+ for(const [key,label] of positions){const id=`r${r}_${key}`;countIds.push(id);names[id]=`第 ${r} 次 · ${label}`;const sq=document.createElement('div');sq.className='square';sq.innerHTML=`<div class="head"><label for="${id}">${label}</label><button type="button" class="clear" data-clear="${id}" aria-label="清空${names[id]}">清空</button></div><input id="${id}" data-num="count" type="text" inputmode="none" autocomplete="off" placeholder="—" aria-label="${names[id]}"><div class="buttons"><button type="button" data-adjust="${id}" data-delta="-1" aria-label="${names[id]}減一">−1</button><button type="button" data-adjust="${id}" data-delta="1" aria-label="${names[id]}加一">+1</button><button type="button" data-adjust="${id}" data-delta="5" aria-label="${names[id]}加五">+5</button></div>`;el.querySelector('.grid').append(sq)}$('rounds').append(el)
+}
+countIds.sort((a,b)=>a.slice(0,2).localeCompare(b.slice(0,2))||['tl','bl','tr','br'].indexOf(a.slice(3))-['tl','bl','tr','br'].indexOf(b.slice(3)));
+const numericIds=[...countIds,'dilutionFactor','volInit','targetConcCoef','targetConcExp','targetSeedCoef','targetSeedExp'];
+const presets={dilutionFactor:[1,2,4,5,10,20],volInit:[0.5,1,2,5,10]};
+const supers=['⁰','¹','²','³','⁴','⁵','⁶','⁷','⁸','⁹'];
+for(const el of document.querySelectorAll('[data-presets]')){const id=el.dataset.presets;for(const n of presets[id]){const b=document.createElement('button');b.type='button';b.dataset.preset=id;b.dataset.value=String(n);b.textContent=String(n)+(id==='dilutionFactor'?'×':'');b.setAttribute('aria-pressed','false');el.append(b)}}
+for(const el of document.querySelectorAll('[data-powers]')){for(const n of [3,4,5,6,7,8]){const b=document.createElement('button');b.type='button';b.dataset.power=el.dataset.powers;b.dataset.value=String(n);b.textContent='10'+supers[n];b.setAttribute('aria-pressed','false');el.append(b)}}
+for(const key of ['7','8','9','4','5','6','1','2','3','.','0','⌫']){const b=document.createElement('button');b.type='button';b.dataset.key=key;b.textContent=key;b.setAttribute('aria-label',key==='⌫'?'刪除最後一個字元':key);$('padGrid').append(b)}
+let active=null;const mobile=matchMedia('(max-width:800px)');let padOpen=false;
+function setPad(open){padOpen=open;const expanded=!mobile.matches||open;$('padBody').hidden=!expanded;document.body.classList.toggle('pad-open',mobile.matches&&open);$('togglePad').setAttribute('aria-expanded',String(expanded));$('togglePad').textContent=open?'收合':'展開'}
+function selectField(id,focus=false,open=true){if(!numericIds.includes(id))return;active=id;for(const k of numericIds)$(k).classList.toggle('active',k===id);if(open)setPad(true);if(focus)$(id).focus({preventScroll:true});if(open&&mobile.matches&&$(id).getBoundingClientRect().bottom>document.querySelector('.pad').getBoundingClientRect().top-8)$(id).scrollIntoView({block:'center',behavior:'instant'});updatePad()}
+function updatePad(){$('padStatus').textContent=active?`${names[active]}：${$(active).value||'未填寫'}`:'請點選數字欄位';for(const b of $('padGrid').querySelectorAll('button'))b.disabled=!active||(b.dataset.key==='.'&&$(active).dataset.num!=='decimal');$('padClear').disabled=!active;$('padNext').disabled=!active||numericIds.indexOf(active)===numericIds.length-1}
+function readNumber(id){const raw=$(id).value.trim();if(!raw)return null;const kind=$(id).dataset.num;const valid=kind==='count'?/^\d+$/:kind==='integer'?/^-?\d+$/:/^(?:\d+(?:\.\d*)?|\.\d+)$/;if(!valid.test(raw))return NaN;const n=Number(raw);return Number.isFinite(n)&&(kind==='decimal'||Number.isSafeInteger(n))?n:NaN}
+function scientific(prefix){const c=readNumber(prefix+'Coef'),e=readNumber(prefix+'Exp');if(c===null&&e===null)return null;if(c===null||e===null||!Number.isFinite(c)||!Number.isSafeInteger(e)||c<=0)return NaN;const n=c*10**e;return Number.isFinite(n)&&n>0?n:NaN}
+const sci=n=>n.toExponential(2).replace('e+','e');
+function setValue(id,value){$(id).value=String(value);changed()}
+function clearFields(ids){for(const id of ids)$(id).value='';changed()}
+function counts(){return countIds.map(readNumber)}
+function average(ns){return ns.reduce((sum,n)=>sum+n,0)/ns.length}
+function changed(){for(const id of numericIds)$(id).removeAttribute('aria-invalid');$('resultOutput').hidden=true;refresh()}
+function refresh(){const ns=counts();let complete=0;for(let r=0;r<2;r++){const arr=ns.slice(r*4,r*4+4),valid=arr.filter(n=>Number.isSafeInteger(n)&&n>=0);complete+=valid.length;$('roundSummary'+(r+1)).textContent=`${valid.length} / 4 格`+(valid.length===4?` · 平均 ${average(valid).toFixed(2)}`:'')}
+ let msg=`已完成 ${complete} / 8 格`;if(complete===8){const m=average(ns);msg+=` · 八格平均 ${m.toFixed(2)}`;const df=readNumber('dilutionFactor');if(Number.isFinite(df)&&df>=1&&Number.isFinite(m*df*1e4))msg+=` · 原濃度 ${sci(m*df*1e4)} cells/mL`}$('countSummary').textContent=msg;
+ for(const prefix of ['targetConc','targetSeed']){const n=scientific(prefix);$(prefix+'Preview').textContent=Number.isFinite(n)?`${n.toLocaleString('en-US',{maximumSignificantDigits:8})} ${prefix==='targetConc'?'cells/mL':'cells/well'}`:''}
+ for(const b of document.querySelectorAll('[data-preset]'))b.setAttribute('aria-pressed',String(readNumber(b.dataset.preset)===Number(b.dataset.value)));for(const b of document.querySelectorAll('[data-power]'))b.setAttribute('aria-pressed',String(readNumber(b.dataset.power+'Exp')===Number(b.dataset.value)));updatePad()}
+function validate(){const ns=counts();for(let i=0;i<ns.length;i++)if(!Number.isSafeInteger(ns[i])||ns[i]<0)return {error:`請填寫${names[countIds[i]]}的非負整數計數（沒有細胞請輸入 0）。`,ids:[countIds[i]]};const df=readNumber('dilutionFactor'),vol=readNumber('volInit'),target=scientific('targetConc'),seed=scientific('targetSeed');if(!Number.isFinite(df)||df<1)return {error:'請輸入至少 1 倍的稀釋倍數。',ids:['dilutionFactor']};if(!Number.isFinite(vol)||vol<=0)return {error:'請輸入大於 0 的懸浮液體積。',ids:['volInit']};if(!Number.isFinite(target)||target<=0)return {error:'請完整輸入有效的目標濃度係數與指數。',ids:['targetConcCoef','targetConcExp']};if(!Number.isFinite(seed)||seed<=0)return {error:'請完整輸入有效的接種量係數與指數。',ids:['targetSeedCoef','targetSeedExp']};return {ns,df,vol,target,seed}}
+function compute({ns,df,vol,target,seed}){const mean=average(ns),conc=mean*df*1e4,total=conc*vol,finalVol=total/target,add=finalVol-vol,seedVol=seed/target*1000;return {mean,conc,total,finalVol,add,seedVol}}
+function showResult(rows,message='',isError=false){const out=$('resultOutput');out.className='result'+(isError?' error':'');out.replaceChildren();if(rows.length){const dl=document.createElement('dl');for(const [key,value] of rows){const dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=key;dd.textContent=value;dl.append(dt,dd)}out.append(dl)}if(message){const p=document.createElement('p');p.textContent=message;out.append(p)}out.hidden=false}
+function calculate(){const input=validate();if(input.error){selectField(input.ids.find(id=>!$(id).value.trim())||input.ids[0],true);for(const id of input.ids)$(id).setAttribute('aria-invalid','true');showResult([],input.error,true);return}const r=compute(input);if(Object.values(r).some(n=>!Number.isFinite(n))||(r.conc>0&&r.total<=0)||r.seedVol<=0){showResult([],'數值超出可計算範圍，請檢查輸入。',true);return}const rows=[['第 1 次平均',average(input.ns.slice(0,4)).toFixed(2)],['第 2 次平均',average(input.ns.slice(4)).toFixed(2)],['八格平均',r.mean.toFixed(2)],['原濃度',sci(r.conc)+' cells/mL'],['總細胞數',sci(r.total)+' cells']];if(r.conc===0){showResult(rows,'八格皆為 0，沒有可用細胞，無法稀釋或接種。',true);return}if(r.conc<input.target){showResult(rows,'原濃度低於目標濃度，無法直接稀釋；需先濃縮細胞。',true);return}const add=Math.max(0,r.add);const fmt=(n,d)=>n>0&&n<10**(-d)?sci(n):n.toFixed(d);rows.push(['目標總體積',fmt(r.finalVol,2)+' mL'],['需加 cDMEM',fmt(add,2)+' mL'],['每 well 接種',fmt(r.seedVol,1)+' µL']);const warnings=[];if(r.seedVol>r.finalVol*1000)warnings.push('總細胞數不足以接種一個 well，請檢查目標接種量。');const ok=saveRecord({time:new Date().toLocaleString('zh-TW',{hour12:false}),name:$('cellName').value.trim()||'Unknown',conc:sci(r.conc),total:sci(r.total),add:fmt(add,2),seed:fmt(r.seedVol,1),counts:input.ns,df:input.df,vol:input.vol,target:input.target,seedTarget:input.seed});if(!ok)warnings.push('無法儲存歷史紀錄，計算結果仍可使用。');showResult(rows,warnings.join(' '),warnings.length>0)}
+function getHistory(){try{const raw=localStorage.getItem('cellHistory');if(raw===null)return [];const arr=JSON.parse(raw);if(!Array.isArray(arr))throw Error('invalid');return arr}catch(e){$('historyNote').textContent='無法讀取既有歷史紀錄；為避免覆蓋資料，已停止寫入。';return null}}
+function saveRecord(record){try{const history=getHistory();if(history===null)return false;history.unshift(record);localStorage.setItem('cellHistory',JSON.stringify(history.slice(0,50)));loadHistory();return true}catch(e){$('historyNote').textContent='無法寫入瀏覽器儲存空間。';return false}}
+function loadHistory(){const history=getHistory();const body=$('historyBody');body.replaceChildren();if(!history)return;if(!history.length){const row=body.insertRow();const td=row.insertCell();td.colSpan=6;td.textContent='尚無紀錄';return}for(const r of history){if(!r||typeof r!=='object')continue;const row=body.insertRow();for(const value of [r.time,r.name,r.conc,r.total,r.add,r.seed])row.insertCell().textContent=value??'—'}}
+for(const id of numericIds){const el=$(id);el.addEventListener('focus',()=>selectField(id));el.addEventListener('click',()=>selectField(id));el.addEventListener('input',changed);el.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();nextField()}})}$('cellName').addEventListener('input',changed);
+function nextField(){if(!active)return;const i=numericIds.indexOf(active);if(i+1<numericIds.length)selectField(numericIds[i+1],true)}
+// Prevent pointer clicks on the keypad from taking focus away from an active input.
+$('padGrid').addEventListener('pointerdown',e=>{if(e.target.closest('button'))e.preventDefault()});
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;if(d.clear){clearFields(d.clear.split(','));return}if(d.roundClear){clearFields(countIds.filter(id=>id.startsWith('r'+d.roundClear+'_')));return}if(d.adjust){const n=readNumber(d.adjust);if(n!==null&&!Number.isSafeInteger(n)){selectField(d.adjust,true);$(d.adjust).setAttribute('aria-invalid','true');return}const v=Math.max(0,(n??0)+Number(d.delta));if(Number.isSafeInteger(v)){selectField(d.adjust,false,false);setValue(d.adjust,v)}return}if(d.preset){selectField(d.preset,false,false);setValue(d.preset,d.value);return}if(d.power){const c=d.power+'Coef',exp=d.power+'Exp';if(!$(c).value.trim())$(c).value='1';selectField(exp,false,false);setValue(exp,d.value);return}if(d.key&&active){const el=$(active),raw=el.value;if(d.key==='⌫')setValue(active,raw.slice(0,-1));else if(d.key==='.'&&(el.dataset.num!=='decimal'||raw.includes('.')))return;else setValue(active,raw+d.key);return}});
+$('padClear').onclick=()=>{if(active)clearFields([active])};$('padNext').onclick=nextField;$('togglePad').onclick=()=>setPad(!padOpen);mobile.addEventListener('change',()=>setPad(false));$('clearCounts').onclick=()=>clearFields(countIds);$('resetForm').onclick=()=>{clearFields(['cellName',...numericIds]);active=null;for(const id of numericIds)$(id).classList.remove('active');setPad(false);updatePad()};$('calculate').onclick=calculate;$('clearHistory').onclick=()=>{if(!confirm('確定清除所有歷史紀錄？此操作無法復原。'))return;try{localStorage.removeItem('cellHistory');$('historyNote').textContent='紀錄儲存在此瀏覽器，保留最近 50 筆；舊版紀錄仍可讀取。';loadHistory()}catch(e){$('historyNote').textContent='無法清除瀏覽器儲存空間。'}};
+setPad(false);refresh();loadHistory();
+</script>
 </body>
 </html>
